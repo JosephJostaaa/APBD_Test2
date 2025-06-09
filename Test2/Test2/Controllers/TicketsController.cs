@@ -24,6 +24,10 @@ public class TicketsController : ControllerBase
     [HttpPost("/customers")]
     public async Task<IActionResult> AddCustomerPurchases([FromBody] CustomerAddDto customerAddDto, CancellationToken cancellationToken)
     {
+        if (ModelState.IsValid == false)
+        {
+            return BadRequest(ModelState);
+        }
         var result = await _dbService.AddCustomer(customerAddDto, cancellationToken);
 
         if (!result.Success)

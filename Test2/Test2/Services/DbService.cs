@@ -60,21 +60,19 @@ public class DbService : IDbService
     public async Task<CustomerAddResponse> AddCustomer(CustomerAddDto customerAddDto,
         CancellationToken cancellationToken)
     {
-        var customer = _context.Customers.FirstOrDefault(c => c.PhoneNumber == customerAddDto.PhoneNumber);
+        var customer = _context.Customers.FirstOrDefault(c => c.CustomerId == customerAddDto.Id);
 
         if (customer == null)
         {
-            var addCustomer = new Customer
+            customer = new Customer
             {
+                CustomerId = customerAddDto.Id,
                 FirstName = customerAddDto.FirstName,
                 LastName = customerAddDto.LastName,
-                PhoneNumber = customerAddDto.PhoneNumber,
-                CustomerId = customerAddDto.Id
+                PhoneNumber = customerAddDto.PhoneNumber
             };
-            _context.Customers.Add(
-                    addCustomer
-                );
-            customer = addCustomer;
+
+            _context.Customers.Add(customer);
         }
         
         foreach (var purch in customerAddDto.Purchases)
